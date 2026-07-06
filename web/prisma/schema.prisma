@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  GP
+  SPECIALIST
+}
+
+enum Urgency {
+  RED
+  ORANGE
+  YELLOW
+  GREEN
+}
+
+model User {
+  id                String         @id @default(cuid())
+  email             String         @unique
+  passwordHash      String
+  name              String
+  role              Role
+  specialty         String?
+  isDummy           Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+  notes             Note[]
+  referralsSent     Referral[]     @relation("GpReferrals")
+  referralsReceived Referral[]     @relation("SpecialistReferrals")
+  notifications     Notification[]
+  urgencyFilter     SpecialistUrgencyFilter?
+}
+
+model SpecialistUrgencyFilter {
+  id             String   @id @default(cuid())
+  specialistId   String   @unique
+  specialist     User     @relation(fields: [specialistId], references: [id], onDelete: Cascade)
+  instructions   String   @default("")
+  documentText   String   @default("")
+  processedRules String   @default("")
+  tierConfig     String   @default("")
+  ruleSyncNotes  String   @default("")
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+}
+
+model Note {
+  id          String     @id @default(cuid())
+  gpId        String
+  gp          User       @relation(fields: [gpId], references: [id], onDelete: Cascade)
+  patientName String     @default("Untitled patient")
+  content     String     @default("")
+  letterName  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  referrals   Referral[]
+}
+
+model Referral {
+  id                  String         @id @default(cuid())
+  noteId              String
+  note                Note           @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  gpId                String
+  gp                  User           @relation("GpReferrals", fields: [gpId], references: [id])
+  specialistId        String
+  specialist          User           @relation("SpecialistReferrals", fields: [specialistId], references: [id])
+  noteContent         String
+  patientName         String
+  dob                 String         @default("")
+  sex                 String         @default("")
+  phone               String         @default("")
+  email               String         @default("")
+  presentingComplaint String         @default("")
+  history             String         @default("")
+  vitals              String         @default("")
+  medications         String         @default("")
+  allergies           String         @default("")
+  redFlags            String         @default("")
+  suggestedSpecialty  String
+  urgency             Urgency
+  seenWithinDays      Int            @default(56)
+  priorityReason      String
+  aiSummary           String
+  bookingStatus       String         @default("unbooked")
+  status              String         @default("pending")
+  createdAt           DateTime       @default(now())
+  notifications       Notification[]
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referralId String
+  referral   Referral @relation(fields: [referralId], references: [id], onDelete: Cascade)
+  message    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}

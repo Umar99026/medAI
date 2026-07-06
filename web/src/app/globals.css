@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --sidebar: #ffffff;
+  --border: #e2e8f0;
+  --accent: #0ea5e9;
+  --urgent-red: #fecaca;
+  --urgent-orange: #fed7aa;
+  --urgent-yellow: #fef08a;
+  --urgent-green: #bbf7d0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.note-paper {
+  background-color: #fff;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    #cbd5e1 27px,
+    #cbd5e1 28px
+  );
+  background-size: 100% 28px;
+  background-position: 0 8px;
+  line-height: 28px;
+}
+
+.urgency-red { background-color: var(--urgent-red); }
+.urgency-orange { background-color: var(--urgent-orange); }
+.urgency-yellow { background-color: var(--urgent-yellow); }
+.urgency-green { background-color: var(--urgent-green); }
