@@ -104,6 +104,20 @@ npm run deploy
 
 Wrangler prints your live URL (e.g. `https://medai.<your-subdomain>.workers.dev`).
 
+### Cloudflare Pages / Workers Builds (GitHub)
+
+If you connect this repo in the Cloudflare dashboard, set **Root directory** to `web` (not the repo root).
+
+| Setting | Value |
+|---------|--------|
+| Root directory | `web` |
+| Framework preset | None |
+| Build command | `npm ci && npx opennextjs-cloudflare build` |
+| Deploy command | `npx opennextjs-cloudflare deploy` |
+| Build output directory | `.open-next` |
+
+Set `CLOUDFLARE_API_TOKEN` in the build environment. Configure D1 bindings and secrets (`JWT_SECRET`, `GEMINI_API_KEY`) as in `wrangler.jsonc`.
+
 > **Windows note:** OpenNext needs symlink support. If `npm run deploy` fails with `EPERM: symlink`, either enable [Developer Mode](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) in Windows Settings, or run deploy from [WSL](https://learn.microsoft.com/en-us/windows/wsl/install). Cloudflare’s GitHub integration also works without local symlinks.
 
 ### 8. Preview before deploying

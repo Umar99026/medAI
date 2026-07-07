@@ -1,0 +1,11 @@
+{
+  "name": "medai",
+  "private": true,
+  "description": "medAI monorepo. The Next.js app lives in web/.",
+  "scripts": {
+    "build": "npm --prefix web ci && npm --prefix web exec -- opennextjs-cloudflare build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

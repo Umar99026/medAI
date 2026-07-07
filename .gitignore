@@ -1,0 +1,22 @@
+.DS_Store
+Thumbs.db
+
+# Secrets / local env
+.env
+.env.*
+web/.dev.vars
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Next.js / build artifacts
+.next/
+out/
+dist/
+web/.open-next/
+web/.next/
+web/.next-spec/
