@@ -9,13 +9,21 @@
     "start:specialist": "cross-env SESSION_COOKIE=medai_session_spec next start -p 3001",
     "build": "prisma generate && next build",
     "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && node scripts/patch-worker-no-images.mjs && node scripts/patch-handler-paths.mjs && node scripts/patch-turbopack-windows.mjs && opennextjs-cloudflare deploy",
+    "deploy:windows": "opennextjs-cloudflare build && node scripts/patch-worker-no-images.mjs && wrangler deploy --no-bundle",
     "lint": "eslint",
     "db:migrate": "prisma migrate dev",
+    "db:migrate:d1:local": "wrangler d1 migrations apply medai-db --local",
+    "db:migrate:d1": "wrangler d1 migrations apply medai-db --remote",
     "db:seed": "npx tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "postinstall": "prisma generate && node scripts/patch-opennext.mjs"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.20.1",
     "@prisma/adapter-better-sqlite3": "^7.8.0",
+    "@prisma/adapter-d1": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.11.1",
@@ -39,6 +47,7 @@
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
     "tsx": "^4.23.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.107.0"
   }
 }

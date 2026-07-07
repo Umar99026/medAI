@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { requireSessionFromRequest } from "@/lib/auth";
 import { matchSpecialty } from "@/lib/gemini";
 
 export async function GET(req: Request) {
+  const prisma = await getPrisma();
   const session = await requireSessionFromRequest(req, ["GP"]);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

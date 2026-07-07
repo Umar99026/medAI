@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { createSession, hashPassword } from "@/lib/auth";
 import { SPECIALTIES } from "@/lib/specialties";
 import type { Role } from "@/generated/prisma/client";
 
 export async function POST(req: Request) {
-  const { name, email, password, role, specialty } = await req.json();
+  const prisma = await getPrisma();
+  const { name, email, password, role, specialty } = (await req.json()) as {
+    name?: string;
+    email?: string;
+    password?: string;
+    role?: string;
+    specialty?: string;
+  };
 
   if (!name?.trim() || !email?.trim() || !password || !role) {
     return NextResponse.json({ error: "Name, email, password and role are required" }, { status: 400 });
@@ -19,7 +26,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Please select your specialty" }, { status: 400 });
   }
 
-  if (role === "SPECIALIST" && !SPECIALTIES.includes(specialty)) {
+  if (role === "SPECIALIST" && specialty && !(SPECIALTIES as readonly string[]).includes(specialty)) {
     return NextResponse.json({ error: "Invalid specialty" }, { status: 400 });
   }
 

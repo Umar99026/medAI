@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { requireSessionFromRequest } from "@/lib/auth";
 import { classifySpecialtyTypes, matchSpecialty } from "@/lib/gemini";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
+  const prisma = await getPrisma();
   const session = await requireSessionFromRequest(req, ["GP"]);
   if (!session) return NextResponse.json({ error: "Unauthorized — please sign in as a GP" }, { status: 401 });
 
-  const { noteId, content } = await req.json();
+  const { noteId, content } = (await req.json()) as { noteId?: string; content?: string };
   let noteContent = content || "";
 
   if (noteId) {

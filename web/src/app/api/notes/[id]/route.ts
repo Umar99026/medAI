@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { requireSessionFromRequest } from "@/lib/auth";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function GET(req: Request, { params }: Params) {
   try {
+    const prisma = await getPrisma();
     const session = await requireSessionFromRequest(req, ["GP"]);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -21,11 +22,16 @@ export async function GET(req: Request, { params }: Params) {
 
 export async function PATCH(req: Request, { params }: Params) {
   try {
+    const prisma = await getPrisma();
     const session = await requireSessionFromRequest(req, ["GP"]);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
-    const body = await req.json().catch(() => ({}));
+    const body = (await req.json().catch(() => ({}))) as {
+      patientName?: string;
+      content?: string;
+      letterName?: string | null;
+    };
     const { patientName, content, letterName } = body;
 
     const existing = await prisma.note.findFirst({ where: { id, gpId: session.id } });

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { requireSessionFromRequest } from "@/lib/auth";
 import {
   compileTierRules,
@@ -32,10 +32,11 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const prisma = await getPrisma();
     const session = await requireSessionFromRequest(req, ["SPECIALIST"]);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { tiers } = await req.json();
+    const { tiers } = (await req.json()) as { tiers?: unknown };
     const normalized: SpecialistTierFilter = normalizeTierFilter(tiers);
     const compiled = compileTierRules(normalized);
     const tierJson = JSON.stringify(normalized);

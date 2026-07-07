@@ -1,10 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import type { Role } from "@/generated/prisma/client";
-
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || "dev-secret-change-in-production"
-);
+import { getEnvVar } from "./env";
 
 export type SessionUser = {
   id: string;
@@ -13,6 +10,11 @@ export type SessionUser = {
   role: Role;
   specialty?: string | null;
 };
+
+async function jwtSecret() {
+  const value = await getEnvVar("JWT_SECRET");
+  return new TextEncoder().encode(value || "dev-secret-change-in-production");
+}
 
 export async function hashPassword(password: string) {
   return bcrypt.hash(password, 10);
@@ -32,12 +34,12 @@ export async function signToken(user: SessionUser): Promise<string> {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("7d")
-    .sign(secret);
+    .sign(await jwtSecret());
 }
 
 export async function verifyToken(token: string): Promise<SessionUser | null> {
   try {
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, await jwtSecret());
     return {
       id: String(payload.id),
       email: String(payload.email),

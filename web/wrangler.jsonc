@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "medai",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat_v2", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "medai"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "medai-db",
+      "database_id": "0a48ea29-e4cd-41fc-8270-c74e00c41a3b",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "rules": [
+    { "type": "ESModule", "globs": [".open-next/cloudflare/*.js"], "fallthrough": true },
+    { "type": "ESModule", "globs": [".open-next/middleware/*.mjs"], "fallthrough": true },
+    { "type": "ESModule", "globs": [".open-next/.build/durable-objects/*.js"], "fallthrough": true }
+  ]
+}

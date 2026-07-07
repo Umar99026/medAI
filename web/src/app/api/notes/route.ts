@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { requireSessionFromRequest } from "@/lib/auth";
 
 export async function GET(req: Request) {
   try {
+    const prisma = await getPrisma();
     const session = await requireSessionFromRequest(req, ["GP"]);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -26,10 +27,15 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const prisma = await getPrisma();
     const session = await requireSessionFromRequest(req, ["GP"]);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const body = await req.json().catch(() => ({}));
+    const body = (await req.json().catch(() => ({}))) as {
+      patientName?: string;
+      content?: string;
+      letterName?: string | null;
+    };
     const { patientName, content, letterName } = body;
 
     const note = await prisma.note.create({

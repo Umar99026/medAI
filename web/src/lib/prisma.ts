@@ -1,32 +1,31 @@
+import { cache } from "react";
 import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaD1 } from "@prisma/adapter-d1";
 
-/** Bump when Prisma schema changes — forces client refresh after hot reload */
-const PRISMA_SCHEMA_VERSION = 2;
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-  prismaSchemaVersion: number | undefined;
-};
-
-function createPrisma() {
-  const url = process.env.DATABASE_URL || "file:./dev.db";
-  const adapter = new PrismaBetterSqlite3({ url });
+const getD1Prisma = cache(async () => {
+  const { getCloudflareContext } = await import("@opennextjs/cloudflare");
+  const { env } = await getCloudflareContext({ async: true });
+  if (!env?.DB) {
+    throw new Error("D1 binding DB is not configured");
+  }
+  const adapter = new PrismaD1(env.DB);
   return new PrismaClient({ adapter });
-}
+});
 
-function getPrisma(): PrismaClient {
-  const existing = globalForPrisma.prisma;
-  if (existing && globalForPrisma.prismaSchemaVersion === PRISMA_SCHEMA_VERSION) {
-    return existing;
+/** Prisma client — D1 on Cloudflare, SQLite file for local `next dev`. */
+export async function getPrisma(): Promise<PrismaClient> {
+  try {
+    const { getCloudflareContext } = await import("@opennextjs/cloudflare");
+    const { env } = await getCloudflareContext({ async: true });
+    if (env?.DB) return getD1Prisma();
+  } catch {
+    // Not on Cloudflare (plain `next dev`)
   }
-  if (existing) {
-    void existing.$disconnect();
-  }
-  const client = createPrisma();
-  globalForPrisma.prisma = client;
-  globalForPrisma.prismaSchemaVersion = PRISMA_SCHEMA_VERSION;
-  return client;
-}
 
-export const prisma = getPrisma();
+  if (process.env.NODE_ENV === "development") {
+    const { getLocalPrisma } = await import("./prisma-local");
+    return getLocalPrisma();
+  }
+
+  throw new Error("No database configured");
+}

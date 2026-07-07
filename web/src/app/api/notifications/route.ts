@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { requireSessionFromRequest } from "@/lib/auth";
 
 export async function GET(req: Request) {
+  const prisma = await getPrisma();
   const session = await requireSessionFromRequest(req);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -30,10 +31,11 @@ export async function GET(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  const prisma = await getPrisma();
   const session = await requireSessionFromRequest(req);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { ids } = await req.json();
+  const { ids } = (await req.json()) as { ids?: string[] };
   if (!Array.isArray(ids) || ids.length === 0) {
     return NextResponse.json({ error: "ids required" }, { status: 400 });
   }

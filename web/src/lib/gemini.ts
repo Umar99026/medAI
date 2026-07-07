@@ -1,3 +1,4 @@
+import { getEnvVar } from "./env";
 import {
   keywordClassifyReasoning,
   keywordClassifySpecialties,
@@ -61,7 +62,7 @@ const MODEL = "gemini-2.0-flash";
 const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 async function callGemini(prompt: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = await getEnvVar("GEMINI_API_KEY");
   if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
 
   const res = await fetch(`${URL}?key=${encodeURIComponent(apiKey)}`, {
@@ -114,7 +115,7 @@ function normalizeSpecialtyNames(names: string[]): string[] {
 export async function classifySpecialtyTypes(noteContent: string): Promise<SpecialtyClassification> {
   const keywordHits = keywordClassifySpecialties(noteContent);
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = await getEnvVar("GEMINI_API_KEY");
   if (!apiKey) {
     return {
       suggestedSpecialties: keywordHits,
@@ -189,7 +190,7 @@ export async function classifyUrgencyPerSpecialistRules(
     };
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = await getEnvVar("GEMINI_API_KEY");
   if (!apiKey) {
     const fallback = applySpecialistUrgencyOverride(noteContent, "GREEN", "", specialistRules, tiers);
     const urgency = fallback.urgency;
@@ -277,7 +278,7 @@ export async function extractStructuredReferral(
 ): Promise<StructuredReferral> {
   const keywordSpecs = keywordClassifySpecialties(noteContent);
   const rules = specialistRules?.trim() || "";
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = await getEnvVar("GEMINI_API_KEY");
 
   let specialistUrgency: {
     urgency: UrgencyLevel;
@@ -417,7 +418,7 @@ export async function syncSpecialistRuleMemory(opts: {
     return { rules: existingMemory, changes: "No new edits — memory unchanged." };
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = await getEnvVar("GEMINI_API_KEY");
   if (!apiKey) {
     const rules = mergeRulesFallback(existingMemory, newInstructions, documentText);
     return {

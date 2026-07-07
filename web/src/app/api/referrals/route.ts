@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { requireSessionFromRequest } from "@/lib/auth";
 import { extractStructuredReferral } from "@/lib/gemini";
 import { getSpecialistRulesContext } from "@/lib/specialistFilter";
@@ -8,6 +8,7 @@ import type { Urgency } from "@/generated/prisma/client";
 
 export async function GET(req: Request) {
   try {
+    const prisma = await getPrisma();
     const session = await requireSessionFromRequest(req);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -47,10 +48,16 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const prisma = await getPrisma();
     const session = await requireSessionFromRequest(req, ["GP"]);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { noteId, specialistId, content, patientName } = await req.json();
+    const { noteId, specialistId, content, patientName } = (await req.json()) as {
+      noteId?: string;
+      specialistId?: string;
+      content?: string;
+      patientName?: string;
+    };
     if (!specialistId) {
       return NextResponse.json({ error: "Specialist required" }, { status: 400 });
     }
@@ -126,10 +133,11 @@ export async function POST(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  const prisma = await getPrisma();
   const session = await requireSessionFromRequest(req, ["SPECIALIST"]);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { referralId, action } = await req.json();
+  const { referralId, action } = (await req.json()) as { referralId?: string; action?: string };
   if (action !== "book") {
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   }

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import type { UrgencyLevel } from "./urgency";
 import {
   compileTierRules,
@@ -53,6 +53,7 @@ export async function getSpecialistTierFilter(specialistId: string): Promise<{
   compiledRules: string;
   updatedAt: Date | null;
 }> {
+  const prisma = await getPrisma();
   const filter = await prisma.specialistUrgencyFilter.findUnique({
     where: { specialistId },
   });
