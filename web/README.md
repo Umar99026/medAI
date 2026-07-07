@@ -111,8 +111,8 @@ If you connect this repo in the Cloudflare dashboard, set **Root directory** to 
 |---------|--------|
 | Root directory | `web` |
 | Framework preset | None |
-| Build command | `npm ci && npx opennextjs-cloudflare build` |
-| Deploy command | `npx opennextjs-cloudflare deploy` |
+| Build command | `npm ci && npm run build` |
+| Deploy command | `npm run deploy` |
 | Build output directory | `.open-next` |
 
 Set `CLOUDFLARE_API_TOKEN` in the build environment. Configure D1 bindings and secrets (`JWT_SECRET`, `GEMINI_API_KEY`) as in `wrangler.jsonc`.

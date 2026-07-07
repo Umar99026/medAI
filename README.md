@@ -32,8 +32,8 @@ If the build fails with `Could not read package.json` at the repo root, Cloudfla
 |---------|--------|
 | **Root directory** | `web` |
 | **Framework preset** | None |
-| **Build command** | `npm ci && npx opennextjs-cloudflare build` |
-| **Deploy command** (Workers Builds) | `npx opennextjs-cloudflare deploy` |
+| **Build command** | `npm ci && npm run build` |
+| **Deploy command** (Workers Builds) | `npm run deploy` |
 | **Build output directory** | `.open-next` |
 
 Alternatively, keep the root directory as `/` and use **Build command**: `npm run build` (this repo’s root `package.json` delegates to `web/`).
