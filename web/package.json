@@ -11,6 +11,7 @@
     "start": "next start",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && node scripts/patch-worker-no-images.mjs && node scripts/patch-handler-paths.mjs && node scripts/patch-turbopack-windows.mjs && opennextjs-cloudflare deploy",
+    "deploy:ci": "opennextjs-cloudflare build && node scripts/patch-worker-no-images.mjs && opennextjs-cloudflare deploy",
     "deploy:windows": "opennextjs-cloudflare build && node scripts/patch-worker-no-images.mjs && wrangler deploy --no-bundle",
     "lint": "eslint",
     "db:migrate": "prisma migrate dev",

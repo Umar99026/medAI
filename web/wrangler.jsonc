@@ -22,6 +22,9 @@
       "migrations_dir": "migrations"
     }
   ],
+  "alias": {
+    "@opentelemetry/api": "next/dist/compiled/@opentelemetry/api"
+  },
   "rules": [
     { "type": "ESModule", "globs": [".open-next/cloudflare/*.js"], "fallthrough": true },
     { "type": "ESModule", "globs": [".open-next/middleware/*.mjs"], "fallthrough": true },
