@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { parseApiResponse } from "@/lib/api";
 import { clearToken, apiFetch } from "@/lib/sessionClient";
 import type { SessionUser } from "@/lib/auth";
-import type { Role } from "@/generated/prisma/client";
+import type { Role } from "@/generated/prisma/enums";
 
 type Props = {
   role?: Role;

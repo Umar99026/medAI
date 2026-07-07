@@ -4,7 +4,7 @@ import { requireSessionFromRequest } from "@/lib/auth";
 import { extractStructuredReferral } from "@/lib/gemini";
 import { getSpecialistRulesContext } from "@/lib/specialistFilter";
 import { URGENCY_RANK, urgencyLabel } from "@/lib/urgency";
-import type { Urgency } from "@/generated/prisma/client";
+import type { Urgency } from "@/generated/prisma/enums";
 
 export async function GET(req: Request) {
   try {

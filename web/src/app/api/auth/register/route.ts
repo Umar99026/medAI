@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
 import { createSession, hashPassword } from "@/lib/auth";
 import { SPECIALTIES } from "@/lib/specialties";
-import type { Role } from "@/generated/prisma/client";
+import type { Role } from "@/generated/prisma/enums";
 
 export async function POST(req: Request) {
   const prisma = await getPrisma();

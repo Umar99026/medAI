@@ -8,6 +8,8 @@
     "start:gp": "cross-env SESSION_COOKIE=medai_session_gp next start -p 3000",
     "start:specialist": "cross-env SESSION_COOKIE=medai_session_spec next start -p 3001",
     "build": "prisma generate && next build",
+    "build:cf": "opennextjs-cloudflare build",
+    "build:next": "prisma generate && next build",
     "start": "next start",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && node scripts/patch-worker-no-images.mjs && node scripts/patch-handler-paths.mjs && node scripts/patch-turbopack-windows.mjs && opennextjs-cloudflare deploy",

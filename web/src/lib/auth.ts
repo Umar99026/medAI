@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
-import type { Role } from "@/generated/prisma/client";
+import type { Role } from "@/generated/prisma/enums";
 import { getEnvVar } from "./env";
 
 export type SessionUser = {

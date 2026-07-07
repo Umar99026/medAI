@@ -1,3 +1,5 @@
+import "server-only";
+
 import { getPrisma } from "@/lib/prisma";
 import type { UrgencyLevel } from "./urgency";
 import {

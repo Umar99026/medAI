@@ -1,3 +1,5 @@
+import "server-only";
+
 import { cache } from "react";
 import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaD1 } from "@prisma/adapter-d1";
