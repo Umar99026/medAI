@@ -1,9 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
   "name": "medai",
-  "compatibility_date": "2025-04-01",
-  "compatibility_flags": ["nodejs_compat_v2", "global_fetch_strictly_public"],
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-03-01",
+  "compatibility_flags": ["nodejs_compat", "nodejs_compat_v2"],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
