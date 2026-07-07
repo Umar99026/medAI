@@ -16,14 +16,13 @@ cd web
 npm install
 cp .env.example .env
 # Optional: add GEMINI_API_KEY to .env
-npm run db:migrate
-npm run db:seed
+npm run db:migrate:d1:local
 npm run dev
 ```
 
 Open `http://localhost:3000`
 
-Local dev uses a SQLite file (`dev.db`) on disk. Cloudflare production uses **D1** (SQLite-compatible, managed by Cloudflare).
+Local dev uses **local D1** (via Wrangler + OpenNext) — the same Prisma Cloudflare runtime as production. Run `npm run db:migrate:d1:local` before first dev session to create tables and seed demo users.
 
 ### Demo logins
 

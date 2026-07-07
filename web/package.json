@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "prisma generate && cross-env SESSION_COOKIE=medai_session_gp NEXT_DIST_DIR=.next-gp next dev -p 3000",
-    "dev:specialist": "prisma generate && cross-env SESSION_COOKIE=medai_session_spec NEXT_DIST_DIR=.next-spec next dev -p 3001",
+    "dev": "prisma generate && cross-env SESSION_COOKIE=medai_session_gp NEXT_DIST_DIR=.next-gp next dev --turbopack -p 3000",
+    "dev:specialist": "prisma generate && cross-env SESSION_COOKIE=medai_session_spec NEXT_DIST_DIR=.next-spec next dev --turbopack -p 3001",
     "start:gp": "cross-env SESSION_COOKIE=medai_session_gp next start -p 3000",
     "start:specialist": "cross-env SESSION_COOKIE=medai_session_spec next start -p 3001",
     "build": "prisma generate && next build",
